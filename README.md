@@ -51,7 +51,7 @@ pip install -r requirements.txt
 To train a FANformer model from scratch:
 
 ```bash
-python train.py --mode train --epochs_text 2 --batch_size 16 --p 0.15
+python HybridFun.py --mode train --epochs_text 2 --batch_size 16 --p 0.15
 ```
 
 Parameters:
@@ -65,7 +65,7 @@ Parameters:
 To run inference with a pre-trained model:
 
 ```bash
-python train.py --mode inference --max_length 100 --top_k 100 --top_p 0.85 --temperature 0.7
+python HybridFun.py --mode inference --max_length 100 --top_k 100 --top_p 0.85 --temperature 0.7
 ```
 
 Parameters:
