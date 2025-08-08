@@ -172,19 +172,19 @@ class HyperConnections(nn.Module):
         self.expansion_rate = expansion_rate
         
         # Determinar si CUDA está disponible
-        device = torch.device('cuda')
-        
-        # Definición de las matrices estáticas - directamente en CUDA con bfloat16
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        # Definición de las matrices estáticas con soporte para CPU o GPU
         self.static_beta = nn.Parameter(torch.ones(expansion_rate, device=device, dtype=torch.bfloat16))
         
-        # Inicialización de alpha según el paper - directamente en CUDA con bfloat16
+        # Inicialización de alpha según el paper en bfloat16
         init_alpha0 = torch.zeros((expansion_rate, 1), device=device, dtype=torch.bfloat16)
         init_alpha0[depth % expansion_rate, 0] = 1.
         
         self.static_alpha = nn.Parameter(torch.cat(
             [init_alpha0, torch.eye(expansion_rate, device=device, dtype=torch.bfloat16)], dim=1))
         
-        # Parámetros para la parte dinámica - directamente en CUDA con bfloat16
+        # Parámetros para la parte dinámica en bfloat16
         self.dynamic_alpha_fn = nn.Parameter(torch.zeros((d_model, expansion_rate+1), device=device, dtype=torch.bfloat16))
         self.dynamic_alpha_scale = nn.Parameter(torch.ones(1, device=device, dtype=torch.bfloat16) * 0.01)
         self.dynamic_beta_fn = nn.Parameter(torch.zeros((d_model), device=device, dtype=torch.bfloat16))
